@@ -133,7 +133,7 @@
             <!-- حاوية كود الخصم (يمكن إخفاؤها من الإدارة) -->
             <div id="promo-input-container" class="mb-4">
                 <div class="flex gap-2">
-                    <input type="text" id="promo-code-input" placeholder="كود الخصم أو الهدية" class="flex-1 border border-gray-300 rounded-xl p-2.5 focus:border-brand-cyan outline-none font-bold text-brand-navy text-sm uppercase text-center" dir="ltr">
+                    <input type="text" id="promo-code-input" placeholder="كود الخصم (إن وجد)" class="flex-1 border border-gray-300 rounded-xl p-2.5 focus:border-brand-cyan outline-none font-bold text-brand-navy text-sm uppercase text-center" dir="ltr">
                     <button type="button" onclick="applyPromoCode()" class="bg-gray-800 text-white px-4 rounded-xl font-bold text-sm hover:bg-black transition-colors">تفعيل</button>
                 </div>
                 <p id="promo-message" class="text-[10px] font-bold mt-1 hidden"></p>
@@ -280,14 +280,14 @@
                 </div>
 
                 <div id="admin-panel-marketing" class="hidden space-y-4">
-                    <!-- نظام هدايا ما بعد الطلب -->
+                    <!-- نظام هدايا ما بعد الطلب التلقائي (الولاء) -->
                     <div class="bg-white border rounded-xl p-4 shadow-sm border-l-4 border-l-green-500">
-                        <h3 class="font-black text-brand-navy mb-3"><i class="fa-solid fa-gift text-green-500"></i> هدايا ما بعد الطلب (الولاء)</h3>
-                        <label class="flex items-center gap-2 mb-3"><input type="checkbox" id="admin-reward-active" class="accent-green-500 w-4 h-4"> <span class="text-sm font-bold text-green-700">إصدار كود هدية عشوائي بعد كل طلب</span></label>
+                        <h3 class="font-black text-brand-navy mb-3"><i class="fa-solid fa-gift text-green-500"></i> نظام الولاء (خصم تلقائي للعملاء)</h3>
+                        <p class="text-[10px] text-gray-500 font-bold mb-3">النظام ده بيسجل خصم تلقائي في جهاز العميل بعد ما يطلب، وبينزل لوحده المرة الجاية بدون أكواد. (عشان متخسرش، العميل مش بياخد خصم جديد لو كان بيستخدم خصم في الأوردر ده).</p>
+                        <label class="flex items-center gap-2 mb-3"><input type="checkbox" id="admin-reward-active" class="accent-green-500 w-4 h-4"> <span class="text-sm font-bold text-green-700">تفعيل خصم تلقائي للطلب القادم</span></label>
                         <div class="grid grid-cols-2 gap-2 bg-green-50 p-3 rounded-lg border border-green-100">
-                            <div><label class="text-[10px] text-gray-500 font-bold block mb-1">كلمة سر الكود (مثال: GIFT)</label><input type="text" id="admin-reward-prefix" class="w-full border rounded p-2 font-bold text-brand-navy uppercase text-center" dir="ltr"></div>
                             <div><label class="text-[10px] text-gray-500 font-bold block mb-1">نوع المكافأة</label><select id="admin-reward-type" class="w-full border rounded p-2 font-bold text-brand-navy"><option value="fixed">خصم مبلغ (ج.م)</option><option value="percent">خصم نسبة (%)</option><option value="free_delivery">توصيل مجاني</option></select></div>
-                            <div class="col-span-2"><label class="text-[10px] text-gray-500 font-bold block mb-1">قيمة الخصم (لو اخترت مبلغ أو نسبة)</label><input type="number" id="admin-reward-value" class="w-full border rounded p-2 font-bold text-brand-navy text-center"></div>
+                            <div><label class="text-[10px] text-gray-500 font-bold block mb-1">قيمة الخصم (للمبلغ أو النسبة)</label><input type="number" id="admin-reward-value" class="w-full border rounded p-2 font-bold text-brand-navy text-center"></div>
                         </div>
                     </div>
 
@@ -299,10 +299,10 @@
 
                     <div class="bg-white border rounded-xl p-4 shadow-sm">
                         <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-black text-brand-navy"><i class="fa-solid fa-ticket text-brand-cyanDark"></i> أكواد الخصم الثابتة</h3>
+                            <h3 class="font-black text-brand-navy"><i class="fa-solid fa-ticket text-brand-cyanDark"></i> أكواد الخصم الثابتة (للمناسبات)</h3>
                             <button onclick="addNewPromoCode()" class="bg-gray-800 hover:bg-black text-white text-xs px-3 py-1.5 rounded transition-colors">+ كود جديد</button>
                         </div>
-                        <label class="flex items-center gap-2 mb-4 bg-gray-50 p-2 rounded border"><input type="checkbox" id="admin-show-promo-field" class="accent-brand-cyanDark w-4 h-4"> <span class="text-xs font-bold">إظهار خانة "كود الخصم" للعملاء في صفحة الطلب (إلغيها لو عايز تخفف الواجهة)</span></label>
+                        <label class="flex items-center gap-2 mb-4 bg-gray-50 p-2 rounded border"><input type="checkbox" id="admin-show-promo-field" class="accent-brand-cyanDark w-4 h-4"> <span class="text-xs font-bold">إظهار خانة "كود الخصم" للعملاء (لو لغيتها الخصم التلقائي لسه هيشتغل مخفي)</span></label>
                         <div id="admin-promos-container" class="space-y-2"></div>
                     </div>
 
@@ -418,10 +418,10 @@
             bannerActive: true, bannerText: "متاح الآن حجز أوردرات - الكمية محدودة!",
             crossSellActive: true, crossSellProductId: 'eggs',
             promoCodes: [], bestSellers: ['super'],
-            showPromoField: true, // إعداد جديد لإظهار/إخفاء كود الخصم للعملاء
+            showPromoField: true, 
             successTitle: "تم استلام الأوردر! 🎉",
             successMessage: "شكراً لثقتك في سمان ههيا.. الأوردر وصل للسيستم بنجاح وهنجهزهولك فوراً. هنتواصل معاك قريباً للتأكيد.",
-            rewardActive: false, rewardPrefix: "GIFT", rewardType: "fixed", rewardValue: 20
+            rewardActive: false, rewardType: "fixed", rewardValue: 20
         };
 
         let productsInfo = {
@@ -444,16 +444,22 @@
         let tempAdminZones = []; let tempPromoCodes = []; let tempProducts = {};
         let cart = {}; let appliedPromo = null; 
         let db = null; let hasCloud = false; let customerType = 'new'; 
-        let isStoreDataLoaded = false; // لمنع ظهور الـ 100 الوهمية
+        let isStoreDataLoaded = false; 
 
         function saveCart() { try { localStorage.setItem('sman_cart', JSON.stringify(cart)); } catch(e) {} }
         
         function loadCart() { 
             try { 
                 const savedCart = localStorage.getItem('sman_cart'); 
-                if (savedCart) { cart = JSON.parse(savedCart); updateUI(); }
-                const savedRewardCode = localStorage.getItem('sman_reward_code');
-                if (savedRewardCode && document.getElementById('promo-code-input')) { document.getElementById('promo-code-input').value = savedRewardCode; }
+                if (savedCart) { cart = JSON.parse(savedCart); }
+                
+                // تحميل خصم الولاء التلقائي لو موجود
+                const savedLoyalty = localStorage.getItem('sman_loyalty_discount');
+                if (savedLoyalty) {
+                    const lData = JSON.parse(savedLoyalty);
+                    appliedPromo = { code: 'عميل مميز', type: lData.type, discount: lData.value, isLoyalty: true };
+                }
+                updateUI();
             } catch (e) { cart = {}; localStorage.removeItem('sman_cart'); } 
         }
         
@@ -474,11 +480,10 @@
             if (globalSettings.minOrder > 0) { document.getElementById('min-order-value').innerText = globalSettings.minOrder; minWarn.classList.remove('hidden'); } 
             else { minWarn.classList.add('hidden'); }
 
-            // إظهار/إخفاء خانة كود الخصم للعملاء
             const promoContainer = document.getElementById('promo-input-container');
             if(promoContainer) {
                 if(globalSettings.showPromoField) promoContainer.classList.remove('hidden');
-                else { promoContainer.classList.add('hidden'); appliedPromo = null; }
+                else { promoContainer.classList.add('hidden'); if(appliedPromo && !appliedPromo.isLoyalty) appliedPromo = null; }
             }
         }
 
@@ -494,11 +499,9 @@
 
         document.addEventListener('DOMContentLoaded', () => { 
             renderDeliveryZones(); loadCart(); setupEventListeners(); initFirebase(); 
-            // Fallback in case Firebase takes too long or fails
             setTimeout(() => {
                 if(!isStoreDataLoaded) {
                     isStoreDataLoaded = true;
-                    // وضع قيم افتراضية في حالة عدم وجود إنترنت
                     Object.keys(productsInfo).forEach(id => {
                         if(globalStock[id] === undefined) globalStock[id] = 0;
                         if(globalPrices[id] === undefined) globalPrices[id] = productsInfo[id].basePrice;
@@ -512,7 +515,7 @@
             const ids = ['customer-name', 'customer-phone-new', 'customer-phone-old'];
             ids.forEach(id => { const el = document.getElementById(id); if(el) el.addEventListener('input', updateUI); });
             if (document.getElementById('delivery-zone')) document.getElementById('delivery-zone').addEventListener('change', updateUI);
-            document.getElementById('promo-code-input')?.addEventListener('input', () => { if (appliedPromo && document.getElementById('promo-code-input').value.trim() === '') { appliedPromo = null; document.getElementById('promo-message').classList.add('hidden'); updateUI(); } });
+            document.getElementById('promo-code-input')?.addEventListener('input', () => { if (appliedPromo && !appliedPromo.isLoyalty && document.getElementById('promo-code-input').value.trim() === '') { appliedPromo = null; document.getElementById('promo-message').classList.add('hidden'); updateUI(); } });
         }
 
         function initFirebase() {
@@ -522,11 +525,10 @@
 
         function listenToDatabase() {
             if(!db) return;
-            db.collection('inventory').doc('settings').onSnapshot(doc => { if(doc.exists) { const data = doc.data(); if(data.productsData) productsInfo = data.productsData; Object.assign(globalSettings, data); if(data.deliveryZones) globalDeliveryZones = data.deliveryZones; applySettingsToUI(); renderDeliveryZones(); } });
+            db.collection('inventory').doc('settings').onSnapshot(doc => { if(doc.exists) { const data = doc.data(); if(data.productsData) productsInfo = data.productsData; Object.assign(globalSettings, data); if(data.deliveryZones) globalDeliveryZones = data.deliveryZones; applySettingsToUI(); renderDeliveryZones(); updateUI(); } });
             db.collection('inventory').doc('prices').onSnapshot(doc => { if(doc.exists) { Object.assign(globalPrices, doc.data()); } });
             db.collection('inventory').doc('discounts_status').onSnapshot(doc => { if(doc.exists) { Object.assign(globalDiscounts, doc.data()); } });
             db.collection('inventory').doc('old_prices').onSnapshot(doc => { if(doc.exists) { Object.assign(globalOldPrices, doc.data()); } });
-            // المخزون هو آخر شيء، بمجرد ما يوصل هنحدث الواجهة بالكامل
             db.collection('inventory').doc('stock').onSnapshot(doc => { 
                 if(doc.exists) { 
                     Object.assign(globalStock, doc.data()); 
@@ -561,14 +563,9 @@
             const input = document.getElementById('promo-code-input').value.trim().toUpperCase();
             const msg = document.getElementById('promo-message');
             if (input === '') return;
-            if (globalSettings.rewardActive && input.startsWith((globalSettings.rewardPrefix || 'GIFT').toUpperCase() + '-')) {
-                appliedPromo = { code: input, type: globalSettings.rewardType, discount: globalSettings.rewardValue };
-                msg.innerText = "أهلاً بك مجدداً! تم تفعيل هديتك بنجاح 🎁"; msg.className = "text-[11px] font-bold mt-1 text-green-600"; msg.classList.remove('hidden');
-            } else {
-                const promo = globalSettings.promoCodes.find(p => p.code.toUpperCase() === input);
-                if (promo) { appliedPromo = promo; msg.innerText = "تم تفعيل كود الخصم بنجاح 🎉"; msg.className = "text-[11px] font-bold mt-1 text-green-600"; msg.classList.remove('hidden'); } 
-                else { appliedPromo = null; msg.innerText = "كود غير صحيح أو منتهي."; msg.className = "text-[11px] font-bold mt-1 text-red-500"; msg.classList.remove('hidden'); }
-            }
+            const promo = globalSettings.promoCodes.find(p => p.code.toUpperCase() === input);
+            if (promo) { appliedPromo = { ...promo, isLoyalty: false }; msg.innerText = "تم تفعيل كود الخصم بنجاح 🎉"; msg.className = "text-[11px] font-bold mt-1 text-green-600"; msg.classList.remove('hidden'); } 
+            else { msg.innerText = "كود غير صحيح أو منتهي."; msg.className = "text-[11px] font-bold mt-1 text-red-500"; msg.classList.remove('hidden'); }
             updateUI();
         };
 
@@ -581,7 +578,7 @@
         }
 
         window.renderProducts = function() {
-            if(!isStoreDataLoaded) return; // منع عرض المنتجات قبل سحب الداتا
+            if(!isStoreDataLoaded) return;
             
             const container = document.getElementById('products-container'); const extrasContainer = document.getElementById('extras-container');
             if(!container || !extrasContainer) return;
@@ -655,7 +652,7 @@
             let discountAmount = 0; const promoRow = document.getElementById('promo-discount-row');
             if (appliedPromo && totalItems > 0) {
                 if(appliedPromo.type === 'free_delivery') { freeDelivery = true; discountAmount = 0; document.getElementById('promo-label').innerText = appliedPromo.code + " (توصيل مجاني)"; document.getElementById('cart-discount').innerText = "0"; } 
-                else { discountAmount = appliedPromo.type === 'percent' ? (subTotalPrice * (appliedPromo.discount / 100)) : appliedPromo.discount; discountAmount = Math.round(Math.min(discountAmount, subTotalPrice)); document.getElementById('promo-label').innerText = appliedPromo.code; document.getElementById('cart-discount').innerText = discountAmount; }
+                else { discountAmount = appliedPromo.type === 'percent' ? (subTotalPrice * (appliedPromo.discount / 100)) : appliedPromo.discount; discountAmount = Math.round(Math.min(discountAmount, subTotalPrice)); document.getElementById('promo-label').innerText = appliedPromo.code + (appliedPromo.isLoyalty ? ' 🎁' : ''); document.getElementById('cart-discount').innerText = discountAmount; }
                 promoRow.classList.remove('hidden');
             } else promoRow.classList.add('hidden');
 
@@ -732,23 +729,28 @@
 
             const orderDate = new Date().toLocaleDateString('ar-EG'); const orderTime = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
             let subTotal = 0; let itemsSummaryArray = []; let smartTagsArray = [isNew ? "#عميل_جديد" : "#عميل_سابق"];
-            let message = `السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n${isNew ? `👤 الاسم: ${customerName}\n📱 الموبايل: ${customerPhone}\n📍 المنطقة: ${zoneName}\n${customerAddress?`🏠 العنوان: ${customerAddress}\n`:''}` : `🔁 عميل سابق\n📱 الموبايل المسجل: ${customerPhone}\n📍 المنطقة: ${zoneName}\n`}🕒 وقت الطلب: ${orderDate} - ${orderTime}\n\n🛒 *الطلبات:*\n`;
-            let orderDetailsForTickTick = `================================\n          فاتورة متجر ${globalSettings.storeName}\n================================\n${isNew ? `👤 الاسم: ${customerName}\n📱 الموبايل: ${customerPhone}\n📍 المنطقة: ${zoneName}\n${customerAddress?`🏠 العنوان: ${customerAddress}\n`:''}` : `🔁 عميل سابق\n📱 الموبايل: ${customerPhone}\n📍 المنطقة: ${zoneName}\n`}🕒 الوقت: ${orderDate} - ${orderTime}\n--------------------------------\n🛒 الطلبات:\n`;
+            
+            // رسالة الواتساب 
+            let message = `السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n${isNew ? `👤 الاسم: ${customerName}\n📱 الموبايل: ${customerPhone}\n📍 المنطقة: ${zoneName}\n${customerAddress?`🏠 العنوان: ${customerAddress}\n`:''}` : `🔁 عميل سابق\n📱 الموبايل: ${customerPhone}\n📍 المنطقة: ${zoneName}\n`}🕒 الوقت: ${orderDate} - ${orderTime}\n\n🛒 *الطلبات:*\n`;
+            
+            // فاتورة تيك تيك (مختصرة جداً)
+            let orderDetailsForTickTick = `🧾 فاتورة جديدة\n📱 ${customerPhone}\n📍 ${zoneName}\n${isNew && customerAddress ? `🏠 ${customerAddress}\n` : ''}🕒 ${orderTime}\n--------------------------------\n`;
 
             for (let id in cart) {
                 const item = cart[id]; const itemTotal = item.quantity * item.price; subTotal += itemTotal;
                 let shortName = item.name.replace('طبق ', '').split(' (')[0]; itemsSummaryArray.push(`${item.quantity} ${shortName}`);
                 let tagName = "#" + shortName.replace(/ /g, '_'); if(!smartTagsArray.includes(tagName)) smartTagsArray.push(tagName);
                 message += `▪️ ${item.name}\n  └ ${item.quantity} × ${item.price} = ${itemTotal} ج.م\n`;
-                orderDetailsForTickTick += `[ ${item.quantity} ] ${item.name} ........ ${itemTotal} ج.م\n`;
+                orderDetailsForTickTick += `[ ${item.quantity} ] ${item.name} = ${itemTotal} ج\n`;
             }
 
             let discountAmount = 0; let discountText = "";
             if (appliedPromo) {
-                if(appliedPromo.type === 'free_delivery') { discountText = `🎁 كود هديتك التوصيل مجاني (${appliedPromo.code})\n`; } 
-                else { discountAmount = appliedPromo.type === 'percent' ? (subTotal * (appliedPromo.discount / 100)) : appliedPromo.discount; discountAmount = Math.round(Math.min(discountAmount, subTotal)); discountText = `🎁 كود خصم (${appliedPromo.code}): -${discountAmount} ج.م\n`; }
-                message += `\n${discountText}`; orderDetailsForTickTick += `--------------------------------\n${discountText}`;
-            } else orderDetailsForTickTick += `--------------------------------\n`;
+                if(appliedPromo.type === 'free_delivery') { discountText = `🎁 ${appliedPromo.isLoyalty ? 'خصم عميل مميز' : appliedPromo.code}: توصيل مجاني\n`; } 
+                else { discountAmount = appliedPromo.type === 'percent' ? (subTotal * (appliedPromo.discount / 100)) : appliedPromo.discount; discountAmount = Math.round(Math.min(discountAmount, subTotal)); discountText = `🎁 ${appliedPromo.isLoyalty ? 'خصم عميل مميز' : appliedPromo.code}: -${discountAmount} ج\n`; }
+                message += `\n${discountText}`; 
+                orderDetailsForTickTick += `--------------------------------\n${discountText}`;
+            }
 
             const totalAfterPromo = subTotal - discountAmount;
             let freeDelivery = (globalSettings.freeDeliveryActive && totalAfterPromo >= globalSettings.freeDeliveryThreshold) || (appliedPromo && appliedPromo.type === 'free_delivery');
@@ -756,15 +758,23 @@
             let deliveryText = freeDelivery ? "مجاني 🎉" : ((deliveryFee === 0 && zoneName === 'مكان آخر') ? "يحدد لاحقاً" : `${deliveryFee} ج.م`);
 
             message += `\n═════════════════\n📦 قيمة الطلبات: ${subTotal} ج.م\n🚚 رسوم التوصيل: ${deliveryText}\n💰 *الإجمالي النهائي: ${finalTotal} ج.م*\n`;
-            orderDetailsForTickTick += `قيمة الطلبات : ${subTotal} ج.م\nرسوم التوصيل : ${deliveryText}\n================================\n💰 الإجمالي النهائي : ${finalTotal} ج.م\n================================\n`;
+            
+            // ختام تيك تيك
+            orderDetailsForTickTick += `--------------------------------\n💰 الإجمالي: ${finalTotal} ج.م\n\n${smartTagsArray.join(' ')}`;
 
-            let generatedRewardCode = "";
-            if (globalSettings.rewardActive) {
-                const random4 = Math.floor(1000 + Math.random() * 9000); generatedRewardCode = `${(globalSettings.rewardPrefix || 'GIFT').toUpperCase()}-${random4}`;
-                smartTagsArray.push(`#كود_هدية_${generatedRewardCode}`); orderDetailsForTickTick += `\n🎁 كود الهدية المُصدر للعميل: ${generatedRewardCode}\n`;
+            // --- نظام الولاء التلقائي (بدون أكواد للمستخدم) ---
+            let earnedLoyalty = false;
+            // لو الإدارة مفعلة المكافأة، والعميل مكنش بيستخدم خصم ولاء في الأوردر ده، نديله خصم للمرة الجاية
+            if (globalSettings.rewardActive && (!appliedPromo || !appliedPromo.isLoyalty)) {
+                localStorage.setItem('sman_loyalty_discount', JSON.stringify({ type: globalSettings.rewardType, value: globalSettings.rewardValue }));
+                earnedLoyalty = true;
+            }
+            
+            // لو استخدم خصم الولاء، نمسحه من جهازه عشان ميستخدموش تاني ورا بعض
+            if (appliedPromo && appliedPromo.isLoyalty) {
+                localStorage.removeItem('sman_loyalty_discount');
             }
 
-            orderDetailsForTickTick += `\n${smartTagsArray.join(' ')}`;
             if(deliveryFee === 0 && zoneName === 'مكان آخر' && !freeDelivery) message += `*(الإجمالي غير شامل رسوم التوصيل)*\n`;
             message += `\n(في انتظار تأكيد الحجز وموعد الاستلام)`;
 
@@ -781,38 +791,47 @@
                 }
             } catch(e) { console.log("Sync Error", e); }
 
-            if(appliedPromo) localStorage.removeItem('sman_reward_code');
-            cart = {}; saveCart(); appliedPromo = null; document.getElementById('promo-code-input').value = ""; document.getElementById('promo-message').classList.add('hidden');
+            cart = {}; saveCart(); appliedPromo = null; 
+            if(document.getElementById('promo-code-input')) document.getElementById('promo-code-input').value = ""; 
+            if(document.getElementById('promo-message')) document.getElementById('promo-message').classList.add('hidden');
+            
             if (isNew) { document.getElementById('customer-name').value = ""; document.getElementById('customer-phone-new').value = ""; document.getElementById('customer-address').value = ""; } 
             else { document.getElementById('customer-phone-old').value = ""; document.getElementById('optional-whatsapp').checked = false; }
             document.getElementById('delivery-zone').value = ""; updateUI(); 
             const container = document.getElementById('products-container'); if(container) container.innerHTML = '<div class="text-center py-10 text-brand-cyanDark"><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><p class="font-bold text-sm">جاري التحديث...</p></div>';
             renderProducts(); toggleCart(); checkoutBtn.innerHTML = originalBtnHtml; checkoutBtn.disabled = false;
 
-            if (isNew || document.getElementById('optional-whatsapp')?.checked) { 
-                if(generatedRewardCode) {
-                    localStorage.setItem('sman_reward_code', generatedRewardCode);
-                    const rewardDesc = globalSettings.rewardType === 'free_delivery' ? 'توصيل مجاني' : globalSettings.rewardType === 'percent' ? `خصم ${globalSettings.rewardValue}%` : `خصم ${globalSettings.rewardValue} ج.م`;
-                    const msgHTML = `<div class="text-5xl mb-3">🎉🎁</div><div class="font-black text-brand-navy mb-2 text-lg">ألف مبروك! كسبت معانا</div><div class="text-red-600 font-black text-xl mb-4">${rewardDesc} في أوردرك الجاي</div><div class="bg-gray-100 p-3 rounded-lg border-2 border-dashed border-gray-300 mb-4"><span class="text-xs text-gray-500 block mb-1">خد سكرين شوت أو انسخ الكود ده:</span><span class="font-black text-3xl tracking-widest text-brand-cyanDark select-all" style="user-select: all;">${generatedRewardCode}</span></div><div class="text-[11px] text-gray-500 font-bold mb-4">هتلاقي الكود محفوظ لوحده المرة الجاية ✨</div>`;
-                    document.getElementById('alert-icon-container').classList.add('hidden'); document.getElementById('alert-title').classList.add('hidden'); document.getElementById('alert-message').innerHTML = msgHTML;
-                    const alertBtn = document.querySelector('#alert-box button'); alertBtn.className = "bg-green-500 hover:bg-green-600 text-white font-black py-4 px-6 rounded-xl w-full transition-colors flex justify-center items-center gap-2 shadow-lg"; alertBtn.innerHTML = 'موافق، تحويل للواتساب <i class="fa-brands fa-whatsapp text-xl"></i>';
+            // إظهار رسالة النجاح
+            const successOrWhatsApp = () => {
+                 if (isNew || document.getElementById('optional-whatsapp')?.checked) { 
+                    window.location.href = `https://api.whatsapp.com/send?phone=20${globalSettings.storePhone}&text=${encodeURIComponent(message)}`;
+                 } else {
+                    document.getElementById('alert-icon-container').className = "w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"; document.getElementById('alert-icon').className = "fa-solid fa-check";
+                    showAlert(globalSettings.successTitle || "تم استلام الأوردر! 🎉", globalSettings.successMessage || "شكراً لثقتك.. الأوردر وصل للسيستم بنجاح.");
+                 }
+            };
+
+            if (earnedLoyalty) {
+                const rewardDesc = globalSettings.rewardType === 'free_delivery' ? 'توصيل مجاني' : globalSettings.rewardType === 'percent' ? `خصم ${globalSettings.rewardValue}%` : `خصم ${globalSettings.rewardValue} ج.م`;
+                const msgHTML = `<div class="text-5xl mb-3">🎉</div><div class="font-black text-brand-navy mb-2 text-lg">شكراً لطلبك!</div><div class="text-green-600 font-black text-xl mb-4">نزل في حسابك ${rewardDesc} لطلبك الجاي 🎁</div><div class="text-sm text-gray-500 font-bold mb-4">الخصم هيتطبق تلقائياً المرة الجاية بدون أي أكواد.</div><div class="text-sm font-bold text-brand-navy mt-2">الأوردر وصل السيستم بنجاح وسيتم تجهيزه.</div>`;
+                document.getElementById('alert-icon-container').classList.add('hidden'); document.getElementById('alert-title').classList.add('hidden'); document.getElementById('alert-message').innerHTML = msgHTML;
+                
+                const alertBtn = document.querySelector('#alert-box button'); 
+                if (isNew || document.getElementById('optional-whatsapp')?.checked) {
+                    alertBtn.className = "bg-green-500 hover:bg-green-600 text-white font-black py-4 px-6 rounded-xl w-full transition-colors flex justify-center items-center gap-2 shadow-lg"; alertBtn.innerHTML = 'موافق، تحويل للواتساب <i class="fa-brands fa-whatsapp text-xl"></i>';
                     alertBtn.onclick = () => { closeAlert(); window.location.href = `https://api.whatsapp.com/send?phone=20${globalSettings.storePhone}&text=${encodeURIComponent(message)}`; };
-                    const md = document.getElementById('alert-modal'); md.classList.remove('hidden'); setTimeout(()=>md.classList.remove('opacity-0'),10);
                 } else {
+                    alertBtn.className = "bg-brand-navy hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-xl w-full transition-colors"; alertBtn.innerHTML = 'حسناً';
+                    alertBtn.onclick = closeAlert;
+                }
+                const md = document.getElementById('alert-modal'); md.classList.remove('hidden'); setTimeout(()=>md.classList.remove('opacity-0'),10);
+            } else {
+                if (isNew || document.getElementById('optional-whatsapp')?.checked) { 
                     document.getElementById('alert-icon-container').className = "w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"; document.getElementById('alert-icon').className = "fa-brands fa-whatsapp";
                     showAlert("جاري التحويل للواتساب 🚀", "تم تجهيز الأوردر بتاعك.. هيتم تحويلك للواتساب دلوقتي عشان تدوس إرسال وتأكد الحجز.");
                     setTimeout(() => { window.location.href = `https://api.whatsapp.com/send?phone=20${globalSettings.storePhone}&text=${encodeURIComponent(message)}`; }, 2500); 
-                }
-            } else {
-                if(generatedRewardCode) {
-                    localStorage.setItem('sman_reward_code', generatedRewardCode);
-                    const rewardDesc = globalSettings.rewardType === 'free_delivery' ? 'توصيل مجاني' : globalSettings.rewardType === 'percent' ? `خصم ${globalSettings.rewardValue}%` : `خصم ${globalSettings.rewardValue} ج.م`;
-                    const msgHTML = `<div class="text-5xl mb-3">🎉🎁</div><div class="font-black text-brand-navy mb-2 text-lg">ألف مبروك! كسبت معانا</div><div class="text-red-600 font-black text-xl mb-4">${rewardDesc} في أوردرك الجاي</div><div class="bg-gray-100 p-3 rounded-lg border-2 border-dashed border-gray-300 mb-4"><span class="text-xs text-gray-500 block mb-1">خد سكرين شوت أو انسخ الكود ده:</span><span class="font-black text-3xl tracking-widest text-brand-cyanDark select-all" style="user-select: all;">${generatedRewardCode}</span></div><div class="text-[11px] text-gray-500 font-bold mb-4">هتلاقي الكود محفوظ لوحده المرة الجاية ✨</div><div class="text-sm font-bold text-green-600 mt-2">الأوردر وصل السيستم بنجاح وسيتم تجهيزه.</div>`;
-                    document.getElementById('alert-icon-container').classList.add('hidden'); document.getElementById('alert-title').classList.add('hidden'); document.getElementById('alert-message').innerHTML = msgHTML;
-                    const md = document.getElementById('alert-modal'); md.classList.remove('hidden'); setTimeout(()=>md.classList.remove('opacity-0'),10);
                 } else {
-                    document.getElementById('alert-icon-container').className = "w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"; document.getElementById('alert-icon').className = "fa-solid fa-check";
-                    showAlert(globalSettings.successTitle || "تم استلام الأوردر! 🎉", globalSettings.successMessage || "شكراً لثقتك.. الأوردر وصل للسيستم بنجاح.");
+                    successOrWhatsApp();
                 }
             }
         };
@@ -841,7 +860,7 @@
         window.openAdminDashboard = () => {
             document.getElementById('admin-store-open').checked = globalSettings.storeOpen; document.getElementById('admin-store-name').value = globalSettings.storeName; document.getElementById('admin-store-desc').value = globalSettings.storeDesc; document.getElementById('admin-store-phone').value = globalSettings.storePhone; document.getElementById('admin-min-order').value = globalSettings.minOrder;
             document.getElementById('admin-free-delivery-active').checked = globalSettings.freeDeliveryActive; document.getElementById('admin-free-delivery-threshold').value = globalSettings.freeDeliveryThreshold; tempAdminZones = JSON.parse(JSON.stringify(globalDeliveryZones)); renderAdminZones();
-            document.getElementById('admin-reward-active').checked = globalSettings.rewardActive; document.getElementById('admin-reward-prefix').value = globalSettings.rewardPrefix; document.getElementById('admin-reward-type').value = globalSettings.rewardType; document.getElementById('admin-reward-value').value = globalSettings.rewardValue; document.getElementById('admin-banner-active').checked = globalSettings.bannerActive; document.getElementById('admin-banner-text').value = globalSettings.bannerText; document.getElementById('admin-crosssell-active').checked = globalSettings.crossSellActive; const csSelect = document.getElementById('admin-crosssell-product'); csSelect.innerHTML=''; Object.keys(productsInfo).forEach(id => csSelect.innerHTML += `<option value="${id}" ${globalSettings.crossSellProductId===id?'selected':''}>${productsInfo[id].name}</option>`); tempPromoCodes = JSON.parse(JSON.stringify(globalSettings.promoCodes||[])); renderAdminPromos();
+            document.getElementById('admin-reward-active').checked = globalSettings.rewardActive; document.getElementById('admin-reward-type').value = globalSettings.rewardType; document.getElementById('admin-reward-value').value = globalSettings.rewardValue; document.getElementById('admin-banner-active').checked = globalSettings.bannerActive; document.getElementById('admin-banner-text').value = globalSettings.bannerText; document.getElementById('admin-crosssell-active').checked = globalSettings.crossSellActive; const csSelect = document.getElementById('admin-crosssell-product'); csSelect.innerHTML=''; Object.keys(productsInfo).forEach(id => csSelect.innerHTML += `<option value="${id}" ${globalSettings.crossSellProductId===id?'selected':''}>${productsInfo[id].name}</option>`); tempPromoCodes = JSON.parse(JSON.stringify(globalSettings.promoCodes||[])); renderAdminPromos();
             document.getElementById('admin-show-promo-field').checked = globalSettings.showPromoField !== false;
             document.getElementById('admin-success-title').value = globalSettings.successTitle; document.getElementById('admin-success-message').value = globalSettings.successMessage; document.getElementById('admin-pin-setting').value = globalSettings.adminPin || '1234';
             tempProducts = JSON.parse(JSON.stringify(productsInfo));
@@ -887,7 +906,6 @@
         window.filterOrders = (f) => { orderFilter=f; renderOrdersList(); };
         window.updateOrderStatus = async (id, s) => { if(db){ await db.collection("orders").doc(id).update({status:s}); loadOrders(); } };
         
-        // مسح جميع الطلبات من قاعدة البيانات
         window.deleteAllOrders = async () => {
             if(!confirm("⚠️ تحذير: هل أنت متأكد من مسح جميع الطلبات من السجل؟ لا يمكن التراجع عن هذا الإجراء!")) return;
             const btn = document.querySelector('button[onclick="deleteAllOrders()"]'); const originalHtml = btn.innerHTML;
@@ -905,7 +923,6 @@
             } else { ordersList = []; renderOrdersList(); btn.innerHTML = originalHtml; showAlert("تم بنجاح", "تم المسح محلياً."); }
         };
 
-        // تصفير إحصائيات المبيعات فقط
         window.resetStatsOnly = async () => {
             if(!confirm("⚠️ تحذير: هل أنت متأكد من تصفير عدادات الإحصائيات (مبيعات اليوم والطلبات) لتبدأ من صفر؟")) return;
             const btn = document.querySelector('button[onclick="resetStatsOnly()"]'); const originalHtml = btn.innerHTML;
@@ -926,7 +943,7 @@
             const newSettings = {
                 storeOpen: document.getElementById('admin-store-open').checked, storeName: document.getElementById('admin-store-name').value.trim() || 'المتجر', storeDesc: document.getElementById('admin-store-desc').value.trim(), storePhone: document.getElementById('admin-store-phone').value.trim(), minOrder: parseInt(document.getElementById('admin-min-order').value) || 0, adminPin: document.getElementById('admin-pin-setting').value.trim(),
                 freeDeliveryActive: document.getElementById('admin-free-delivery-active').checked, freeDeliveryThreshold: parseInt(document.getElementById('admin-free-delivery-threshold').value) || 0, deliveryZones: tempAdminZones.filter(z=>z.name.trim()),
-                rewardActive: document.getElementById('admin-reward-active').checked, rewardPrefix: document.getElementById('admin-reward-prefix').value.trim().toUpperCase() || 'GIFT', rewardType: document.getElementById('admin-reward-type').value, rewardValue: parseInt(document.getElementById('admin-reward-value').value) || 0,
+                rewardActive: document.getElementById('admin-reward-active').checked, rewardType: document.getElementById('admin-reward-type').value, rewardValue: parseInt(document.getElementById('admin-reward-value').value) || 0,
                 bannerActive: document.getElementById('admin-banner-active').checked, bannerText: document.getElementById('admin-banner-text').value.trim(), crossSellActive: document.getElementById('admin-crosssell-active').checked, crossSellProductId: document.getElementById('admin-crosssell-product').value, promoCodes: tempPromoCodes.filter(p=>p.code.trim()), bestSellers: globalSettings.bestSellers,
                 showPromoField: document.getElementById('admin-show-promo-field').checked,
                 successTitle: document.getElementById('admin-success-title').value.trim(), successMessage: document.getElementById('admin-success-message').value.trim(), productsData: tempProducts 
@@ -945,6 +962,5 @@
     </script>
 </body>
 </html>
-
 
 ```
