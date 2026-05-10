@@ -102,8 +102,8 @@
         <div class="p-5 border-t border-gray-200 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.03)] overflow-y-auto max-h-[60vh] cart-scroll">
             
             <div class="flex gap-2 mb-6 bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200">
-                <button type="button" id="tab-new" onclick="switchCustomerType('new')" class="flex-1 py-3 rounded-xl bg-white shadow-sm font-black text-brand-navy text-sm transition-all flex items-center justify-center gap-2 border border-gray-200/50"><span>أول مرة تنورنا؟</span> 😍</button>
-                <button type="button" id="tab-old" onclick="switchCustomerType('old')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold text-sm transition-all hover:text-brand-navy flex items-center justify-center gap-2"><span>عميلنا الدائم؟</span> 😎</button>
+                <button type="button" id="tab-new" onclick="switchCustomerType('new')" class="flex-1 py-3 rounded-xl bg-white shadow-sm font-black text-brand-navy text-sm transition-all flex items-center justify-center gap-2 border border-gray-200/50"><span>أول مرة تطلب مننا؟</span> 😍</button>
+                <button type="button" id="tab-old" onclick="switchCustomerType('old')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold text-sm transition-all hover:text-brand-navy flex items-center justify-center gap-2"><span>طلبت مننا قبل كده؟</span> 😎</button>
             </div>
 
             <div class="mb-5 space-y-4">
@@ -114,7 +114,7 @@
 
                 <div id="new-cust-fields" class="space-y-4 mt-4">
                     <div>
-                        <label class="block text-sm font-black text-brand-navy mb-1.5"><i class="fa-regular fa-user text-brand-cyanDark ml-1"></i> الاسم بالكامل <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-black text-brand-navy mb-1.5"><i class="fa-regular fa-user text-brand-cyanDark ml-1"></i> اسم حضرتك <span class="text-red-500">*</span></label>
                         <input type="text" id="customer-name" placeholder="مثال: محمد أحمد..." class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-brand-cyan outline-none font-bold text-brand-navy bg-gray-50 focus:bg-white transition-all">
                     </div>
                     <div>
@@ -122,7 +122,7 @@
                         <input type="tel" id="customer-phone-new" placeholder="01XXXXXXXXX" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-brand-cyan outline-none font-black text-brand-navy bg-gray-50 focus:bg-white transition-all text-left tracking-widest" dir="ltr">
                     </div>
                     <div>
-                        <label class="block text-sm font-black text-brand-navy mb-1.5"><i class="fa-solid fa-house text-brand-cyanDark ml-1"></i> العنوان بالتفصيل</label>
+                        <label class="block text-sm font-black text-brand-navy mb-1.5"><i class="fa-solid fa-house text-brand-cyanDark ml-1"></i> العنوان بالتفصيل (اختياري)</label>
                         <input type="text" id="customer-address" placeholder="اسم الشارع، علامة مميزة بجوارك..." class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-brand-cyan outline-none font-bold text-brand-navy bg-gray-50 focus:bg-white transition-all">
                     </div>
                 </div>
@@ -771,6 +771,10 @@
             const isNew = customerType === 'new'; const deliverySelect = document.getElementById('delivery-zone');
             const selectedZone = globalDeliveryZones.find(z => z.id === deliverySelect.value);
             const zoneName = selectedZone ? selectedZone.name : 'غير محدد'; const deliveryFee = selectedZone ? selectedZone.price : 0;
+            
+            // قراءة رغبة العميل في الواتساب قبل ما الفورم تتفرغ
+            const wantsWhatsApp = isNew || document.getElementById('optional-whatsapp')?.checked;
+            
             let customerName = ""; let customerPhone = ""; let customerAddress = "";
 
             if (isNew) {
@@ -909,7 +913,7 @@
             renderProducts(); toggleCart(); checkoutBtn.innerHTML = originalBtnHtml; checkoutBtn.disabled = false;
 
             const successOrWhatsApp = () => {
-                 if (isNew || document.getElementById('optional-whatsapp')?.checked) { 
+                 if (wantsWhatsApp) { 
                     window.location.href = `https://api.whatsapp.com/send?phone=20${globalSettings.storePhone}&text=${encodeURIComponent(message)}`;
                  } else {
                     document.getElementById('alert-icon-container').className = "w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"; document.getElementById('alert-icon').className = "fa-solid fa-check";
@@ -932,7 +936,7 @@
                 document.getElementById('alert-icon-container').classList.add('hidden'); document.getElementById('alert-title').classList.add('hidden'); document.getElementById('alert-message').innerHTML = msgHTML;
                 
                 const alertBtn = document.querySelector('#alert-box button'); 
-                if (isNew || document.getElementById('optional-whatsapp')?.checked) {
+                if (wantsWhatsApp) {
                     alertBtn.className = "bg-green-500 hover:bg-green-600 text-white font-black py-4 px-6 rounded-xl w-full transition-colors flex justify-center items-center gap-2 shadow-lg"; alertBtn.innerHTML = 'موافق، تحويل للواتساب <i class="fa-brands fa-whatsapp text-xl"></i>';
                     alertBtn.onclick = () => { closeAlert(); window.location.href = `https://api.whatsapp.com/send?phone=20${globalSettings.storePhone}&text=${encodeURIComponent(message)}`; };
                 } else {
@@ -941,7 +945,7 @@
                 }
                 const md = document.getElementById('alert-modal'); md.classList.remove('hidden'); setTimeout(()=>md.classList.remove('opacity-0'),10);
             } else {
-                if (isNew || document.getElementById('optional-whatsapp')?.checked) { 
+                if (wantsWhatsApp) { 
                     document.getElementById('alert-icon-container').className = "w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"; document.getElementById('alert-icon').className = "fa-brands fa-whatsapp";
                     showAlert("جاري التحويل للواتساب 🚀", "تم تجهيز الأوردر بتاعك.. هيتم تحويلك للواتساب دلوقتي عشان تدوس إرسال وتأكد الحجز.");
                     setTimeout(() => { window.location.href = `https://api.whatsapp.com/send?phone=20${globalSettings.storePhone}&text=${encodeURIComponent(message)}`; }, 2500); 
