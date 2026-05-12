@@ -1133,7 +1133,7 @@
         window.renderAdminZones = () => { const c=document.getElementById('admin-zones-container'); c.innerHTML=''; tempAdminZones.forEach((z,i) => c.innerHTML += `<div class="flex gap-2 items-center"><input type="text" value="${z.name}" class="flex-1 border rounded p-2 text-sm font-bold text-brand-navy outline-none focus:border-brand-cyan" onchange="tempAdminZones[${i}].name=this.value"><input type="number" value="${z.price}" class="w-16 border rounded p-2 text-sm text-center font-bold text-brand-cyanDark outline-none focus:border-brand-cyan" onchange="tempAdminZones[${i}].price=parseInt(this.value)"><button onclick="tempAdminZones.splice(${i},1);renderAdminZones()" class="text-red-500 hover:bg-red-50 rounded w-8 h-8 transition-colors"><i class="fa-solid fa-trash"></i></button></div>`); };
         window.addNewAdminZone = () => { tempAdminZones.push({id:'z_'+Date.now(), name:'', price:0}); renderAdminZones(); };
         
-        window.renderAdminPromos = () => { 
+                window.renderAdminPromos = () => { 
             const c = document.getElementById('admin-promos-container'); c.innerHTML=''; 
             tempPromoCodes.forEach((p,i) => {
                 const autoBadge = p.isAuto ? `<span class="bg-yellow-100 text-yellow-700 text-[8px] font-black px-1 rounded ml-1">تلقائي</span>` : '';
@@ -1141,7 +1141,8 @@
                 if(p.usesLeft === undefined) p.usesLeft = p.isAuto ? 1 : 100;
                 
                 c.innerHTML += `
-                <div class="flex flex-col gap-2 bg-gray-50 p-2 border border-gray-200 rounded-lg mb-2">
+                <div class="flex flex-col gap-2 bg-gray-50 p-2 border border-gray-200 rounded-lg mb-2 relative overflow-hidden">
+                    ${p.customerPhone ? `<div class="absolute top-0 right-0 w-1 h-full bg-purple-500"></div>` : ''}
                     <div class="flex gap-1 items-center">
                         <input type="text" value="${p.code}" placeholder="الكود" class="w-20 border rounded p-1 text-xs text-center uppercase font-bold text-brand-navy outline-none focus:border-brand-cyan" onchange="tempPromoCodes[${i}].code=this.value.toUpperCase()">
                         ${autoBadge}
@@ -1152,6 +1153,13 @@
                             <option value="free_delivery" ${p.type==='free_delivery'?'selected':''}>توصيل مجاني</option>
                         </select>
                     </div>
+                    
+                    <!-- خانة رقم العميل / الملاحظات -->
+                    <div class="flex items-center bg-white border rounded p-1 border-gray-300">
+                        <i class="fa-solid fa-mobile-screen text-gray-400 text-[10px] w-4 text-center"></i>
+                        <input type="text" value="${p.customerPhone || ''}" placeholder="رقم الموبايل أو اسم العميل (اختياري)" class="flex-1 text-[10px] font-bold text-brand-navy outline-none bg-transparent" onchange="tempPromoCodes[${i}].customerPhone=this.value" dir="ltr" style="text-align: right;">
+                    </div>
+
                     <div class="flex gap-2 items-center justify-between">
                         <label class="flex items-center gap-1 text-[10px] font-bold text-gray-600">
                             متاح لعدد أشخاص:
@@ -1162,6 +1170,7 @@
                 </div>`;
             }); 
         };
+
         window.addNewPromoCode = () => { tempPromoCodes.push({code:'', discount:0, type:'fixed', usesLeft: 1}); renderAdminPromos(); };
 
         window.renderOrdersList = () => {
