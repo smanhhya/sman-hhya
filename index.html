@@ -1011,14 +1011,20 @@
                     <div class="text-5xl mb-3">🎉</div>
                     <div class="font-black text-brand-navy mb-2 text-lg">شكراً لطلبك!</div>
                     <div class="text-green-600 font-black text-sm mb-2">تم إصدار كود خصم خاص بك لطلبك القادم 🎁</div>
-                    <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-3 rounded-xl mb-4">
-                        <span class="text-xs font-bold text-gray-500 block mb-1">انسخ هذا الكود:</span>
-                        <span class="font-black text-2xl text-brand-cyanDark tracking-wider select-all">${newPromoCode}</span>
-                        <span class="text-xs font-bold text-gray-600 block mt-1">يمنحك ${rewardDesc} (يستخدم مرة واحدة)</span>
+                    <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-4 rounded-xl mb-4 relative">
+                        <span class="text-xs font-bold text-gray-500 block mb-1">كود الخصم الخاص بك:</span>
+                        <span class="font-black text-3xl text-brand-cyanDark tracking-wider select-all block mb-2">${newPromoCode}</span>
+                        
+                        <!-- زرار النسخ الجديد -->
+                        <button onclick="navigator.clipboard.writeText('${newPromoCode}'); this.innerHTML='<i class=\\'fa-solid fa-check\\'></i> تم النسخ بنجاح'; this.classList.replace('bg-brand-navy', 'bg-green-500'); setTimeout(() => { this.innerHTML='<i class=\\'fa-regular fa-copy\\'></i> انسخ الكود'; this.classList.replace('bg-green-500', 'bg-brand-navy'); }, 2000);" class="w-full bg-brand-navy hover:bg-gray-800 text-white text-sm py-2 rounded-lg font-bold transition-colors flex justify-center items-center gap-2 shadow-sm">
+                            <i class="fa-regular fa-copy"></i> انسخ الكود
+                        </button>
+
+                        <span class="text-xs font-bold text-gray-600 block mt-3">يمنحك ${rewardDesc} (يستخدم مرة واحدة)</span>
                     </div>
                     <div class="text-sm font-bold text-brand-navy mt-2">الأوردر وصل السيستم بنجاح وسيتم تجهيزه.</div>`;
                 document.getElementById('alert-icon-container').classList.add('hidden'); document.getElementById('alert-title').classList.add('hidden'); document.getElementById('alert-message').innerHTML = msgHTML;
-                
+       
                 const alertBtn = document.querySelector('#alert-box button'); 
                 if (wantsWhatsApp) {
                     alertBtn.className = "bg-green-500 hover:bg-green-600 text-white font-black py-4 px-6 rounded-xl w-full transition-colors flex justify-center items-center gap-2 shadow-lg"; alertBtn.innerHTML = 'موافق، تحويل للواتساب <i class="fa-brands fa-whatsapp text-xl"></i>';
