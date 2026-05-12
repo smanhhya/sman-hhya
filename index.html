@@ -685,9 +685,17 @@
             updateUI();
         };
 
-        window.getCardActionHTML = function(id) {
+                window.getCardActionHTML = function(id) {
             if (globalSettings.storeOpen === false) return `<div class="w-full bg-gray-100 text-gray-400 font-bold py-2 rounded-xl text-sm border border-gray-200 text-center cursor-not-allowed">مغلق</div>`;
+            const stock = globalStock[id] || 0; const pInfo = productsInfo[id] || {};
+            const isPreorderMode = stock <= 0 && pInfo.allowPreorder;
             const inCart = cart[id]?.quantity || 0; const available = getAvailableStock(id);
+
+            if (isPreorderMode) {
+                if (inCart > 0) return `<div class="flex items-center justify-between bg-orange-50 border border-orange-300 rounded-xl p-1 h-[40px]"><div onclick="updateQuantity('${id}', 1)" class="w-9 h-full bg-white text-orange-600 rounded-lg shadow-sm font-black text-xl flex items-center justify-center cursor-pointer select-none">+</div><span class="font-black text-brand-navy text-lg min-w-[28px] text-center select-none">${inCart}</span><div onclick="updateQuantity('${id}', -1)" class="w-9 h-full bg-white text-red-500 rounded-lg shadow-sm font-black text-2xl flex items-center justify-center cursor-pointer select-none pb-1">-</div></div>`;
+                return `<div onclick="addToCart('${id}')" class="w-full bg-orange-500 text-white hover:bg-orange-600 font-black py-2 rounded-xl transition-colors shadow-sm text-sm flex justify-center items-center gap-2 cursor-pointer select-none"><i class="fa-solid fa-clock"></i> احجز لـ (${pInfo.preorderBatch || 'الدفعة القادمة'})</div>`;
+            }
+
             if (available === 0 && inCart === 0) return `<div class="w-full bg-gray-100 text-gray-400 font-bold py-2 rounded-xl text-sm border border-gray-200 text-center cursor-not-allowed">نفدت الكمية</div>`;
             if (inCart > 0) return `<div class="flex items-center justify-between bg-brand-light/50 border border-brand-cyan/40 rounded-xl p-1 h-[40px]"><div onclick="updateQuantity('${id}', 1)" class="w-9 h-full bg-white text-brand-cyanDark rounded-lg shadow-sm font-black text-xl flex items-center justify-center cursor-pointer select-none">+</div><span class="font-black text-brand-navy text-lg min-w-[28px] text-center select-none">${inCart}</span><div onclick="updateQuantity('${id}', -1)" class="w-9 h-full bg-white text-red-500 rounded-lg shadow-sm font-black text-2xl flex items-center justify-center cursor-pointer select-none pb-1">-</div></div>`;
             return `<div onclick="addToCart('${id}')" class="w-full bg-brand-cyanDark text-white hover:bg-brand-navy font-black py-2 rounded-xl transition-colors shadow-sm text-sm flex justify-center items-center gap-2 cursor-pointer select-none"><i class="fa-solid fa-plus"></i> إضافة للسلة</div>`;
@@ -695,16 +703,23 @@
 
         window.renderProducts = function() {
             if(!isStoreDataLoaded) return;
-            
             const container = document.getElementById('products-container'); const extrasContainer = document.getElementById('extras-container');
             if(!container || !extrasContainer) return;
             
             container.innerHTML = ''; extrasContainer.innerHTML = ''; let mainProductsCount = 0;
             Object.keys(productsInfo).forEach(id => {
-                const item = productsInfo[id]; const available = getAvailableStock(id);
+                const item = productsInfo[id]; const stock = globalStock[id] || 0; const available = getAvailableStock(id);
+                const isPreorderMode = stock <= 0 && item.allowPreorder;
                 const currentPrice = globalPrices[id] || item.basePrice; const oldPrice = globalOldPrices[id];
                 const isDiscountActive = globalDiscounts[id]; const isBestSeller = globalSettings.bestSellers && globalSettings.bestSellers.includes(id);
-                const stockBadgeClass = available <= 10 ? (available === 0 ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600') : 'bg-green-50 text-green-700';
+                
+                let stockHtml = '';
+                if (isPreorderMode) {
+                    stockHtml = `<div class="text-[10px] font-bold px-1.5 py-0.5 rounded border bg-orange-50 text-orange-600 shrink-0"><i class="fa-solid fa-clock"></i> متاح للحجز المسبق</div>`;
+                } else {
+                    const stockBadgeClass = available <= 10 ? (available === 0 ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600') : 'bg-green-50 text-green-700';
+                    stockHtml = `<div class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${stockBadgeClass} shrink-0">المتاح: <span id="stock-display-${id}">${available}</span></div>`;
+                }
 
                 let priceHtml = ''; let saleBadgeHtml = '';
                 if (isDiscountActive) {
@@ -717,10 +732,10 @@
 
                 if (!item.isExtra) {
                     mainProductsCount++;
-                    container.innerHTML += `<div class="bg-white rounded-2xl shadow-sm border ${isDiscountActive ? 'border-red-200' : 'border-gray-200'} overflow-hidden flex flex-row h-[130px] relative">${saleBadgeHtml}<div class="p-3 flex-1 flex flex-col justify-between bg-white min-w-0"><div><h3 class="text-sm md:text-base font-black text-brand-navy truncate mb-1">${item.name}</h3><div class="flex items-center justify-between gap-2 mb-1">${priceHtml}<span class="bg-gray-50 text-gray-500 text-[10px] px-1.5 py-0.5 rounded border border-gray-200 font-bold whitespace-nowrap"><i class="fa-solid fa-scale-balanced mr-1"></i> ${item.weight}</span></div></div><div class="flex items-center justify-between mt-auto"><div class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${stockBadgeClass} shrink-0">المتاح: <span id="stock-display-${id}">${available}</span></div><div class="w-28 shrink-0" id="card-action-${id}">${window.getCardActionHTML(id)}</div></div></div><div class="w-32 shrink-0 relative bg-gray-100 border-r border-gray-100">${bestSellerHtml}<img loading="lazy" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23f1f5f9\\'/></svg>'" class="w-full h-full object-cover"></div></div>`;
+                    container.innerHTML += `<div class="bg-white rounded-2xl shadow-sm border ${isDiscountActive ? 'border-red-200' : 'border-gray-200'} overflow-hidden flex flex-row h-[130px] relative">${saleBadgeHtml}<div class="p-3 flex-1 flex flex-col justify-between bg-white min-w-0"><div><h3 class="text-sm md:text-base font-black text-brand-navy truncate mb-1">${item.name}</h3><div class="flex items-center justify-between gap-2 mb-1">${priceHtml}<span class="bg-gray-50 text-gray-500 text-[10px] px-1.5 py-0.5 rounded border border-gray-200 font-bold whitespace-nowrap"><i class="fa-solid fa-scale-balanced mr-1"></i> ${item.weight}</span></div></div><div class="flex items-center justify-between mt-auto">${stockHtml}<div class="w-28 shrink-0" id="card-action-${id}">${window.getCardActionHTML(id)}</div></div></div><div class="w-32 shrink-0 relative bg-gray-100 border-r border-gray-100">${bestSellerHtml}<img loading="lazy" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23f1f5f9\\'/></svg>'" class="w-full h-full object-cover"></div></div>`;
                 } else {
                     let extraPriceHtml = isDiscountActive ? `<div class="flex gap-2 items-center"><span class="text-red-600 font-black text-sm"><span id="price-display-${id}">${currentPrice}</span> ج</span><span class="text-[10px] text-gray-400 line-through">${oldPrice}</span></div>` : `<div class="text-brand-cyanDark font-black text-sm"><span id="price-display-${id}">${currentPrice}</span> ج</div>`;
-                    extrasContainer.innerHTML += `<div class="bg-white rounded-2xl shadow-sm border ${isDiscountActive ? 'border-red-300' : 'border-gray-200'} overflow-hidden flex flex-row items-center p-2.5 gap-3 h-[90px] relative">${isDiscountActive ? `<div class="absolute top-1 right-1 bg-red-500 w-2 h-2 rounded-full sale-badge"></div>` : ''}<div class="flex-1 min-w-0"><h4 class="font-black text-brand-navy text-xs sm:text-sm truncate">${item.name}</h4>${extraPriceHtml}<div class="text-[10px] font-bold px-1.5 py-0.5 rounded inline-flex border ${stockBadgeClass} shrink-0 mt-1">المتاح: <span id="stock-display-${id}">${available}</span></div></div><div class="w-28 shrink-0" id="card-action-${id}">${window.getCardActionHTML(id)}</div><div class="w-16 h-16 sm:w-20 sm:h-20 shrink-0 relative overflow-hidden rounded-xl border border-gray-100">${bestSellerHtml}<img loading="lazy" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23f8fafc\\'/></svg>'" class="w-full h-full object-cover"></div></div>`;
+                    extrasContainer.innerHTML += `<div class="bg-white rounded-2xl shadow-sm border ${isDiscountActive ? 'border-red-300' : 'border-gray-200'} overflow-hidden flex flex-row items-center p-2.5 gap-3 h-[90px] relative">${isDiscountActive ? `<div class="absolute top-1 right-1 bg-red-500 w-2 h-2 rounded-full sale-badge"></div>` : ''}<div class="flex-1 min-w-0"><h4 class="font-black text-brand-navy text-xs sm:text-sm truncate">${item.name}</h4>${extraPriceHtml}<div class="mt-1">${stockHtml}</div></div><div class="w-28 shrink-0" id="card-action-${id}">${window.getCardActionHTML(id)}</div><div class="w-16 h-16 sm:w-20 sm:h-20 shrink-0 relative overflow-hidden rounded-xl border border-gray-100">${bestSellerHtml}<img loading="lazy" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23f8fafc\\'/></svg>'" class="w-full h-full object-cover"></div></div>`;
                 }
             });
             if(mainProductsCount === 0) container.innerHTML = '<div class="text-center py-10 text-gray-400 font-bold">لا توجد منتجات حالياً</div>';
@@ -728,17 +743,33 @@
 
         window.addToCart = function(id) {
             if (globalSettings.storeOpen === false) return;
-            if (getAvailableStock(id) <= 0) { showAlert("عذراً", "الكمية المتاحة لا تكفي حالياً."); return; }
-            if (cart[id]) cart[id].quantity++; else cart[id] = { quantity: 1, price: globalPrices[id] || productsInfo[id].basePrice, name: productsInfo[id].name };
+            const stock = globalStock[id] || 0; const pInfo = productsInfo[id] || {};
+            const isPreorderMode = stock <= 0 && pInfo.allowPreorder;
+
+            if (!isPreorderMode && getAvailableStock(id) <= 0) { showAlert("عذراً", "الكمية المتاحة لا تكفي حالياً."); return; }
+            
+            if (cart[id]) cart[id].quantity++; 
+            else {
+                let itemName = pInfo.name;
+                if (isPreorderMode) itemName += ` (حجز: ${pInfo.preorderBatch || 'الدفعة القادمة'})`;
+                cart[id] = { quantity: 1, price: globalPrices[id] || pInfo.basePrice, name: itemName, isPreorder: isPreorderMode };
+            }
             saveCart(); updateUI(); requestAnimationFrame(() => renderProducts()); 
         };
 
         window.updateQuantity = function(id, delta) {
             if (!cart[id] || globalSettings.storeOpen === false) return; 
-            if (delta === 1) { if (getAvailableStock(id) > 0) cart[id].quantity++; else showAlert("عذراً", "لا يوجد مخزون إضافي متاح."); } 
+            const stock = globalStock[id] || 0; const pInfo = productsInfo[id] || {};
+            const isPreorderMode = stock <= 0 && pInfo.allowPreorder;
+
+            if (delta === 1) { 
+                if (isPreorderMode || getAvailableStock(id) > 0) cart[id].quantity++; 
+                else showAlert("عذراً", "لا يوجد مخزون إضافي متاح."); 
+            } 
             else if (delta === -1) { cart[id].quantity--; if (cart[id].quantity <= 0) delete cart[id]; }
             saveCart(); updateUI(); requestAnimationFrame(() => renderProducts()); 
         };
+
 
         window.updateUI = function() {
             let totalItems = 0, subTotalPrice = 0; const cartItemsContainer = document.getElementById('cart-items');
