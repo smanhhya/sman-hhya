@@ -389,14 +389,26 @@
                 </div>
 
                 <div id="admin-panel-advanced" class="hidden space-y-4">
-                    <div class="bg-white border rounded-xl p-4 shadow-sm mb-4">
-                        <h3 class="font-black text-brand-navy mb-3"><i class="fa-solid fa-language text-brand-cyanDark"></i> نصوص وتسميات النظام</h3>
-                        <label class="text-xs font-bold text-gray-500 block mb-1">تسمية العميل القديم (تظهر في الواتساب والطلبات)</label>
-                        <input type="text" id="admin-old-customer-label" placeholder="مثال: عميل سابق" class="w-full border rounded-lg p-2 mb-3 font-bold text-brand-navy">
-                        <label class="text-xs font-bold text-gray-500 block mb-1">قالب رسالة الواتساب</label>
-                        <p class="text-[10px] text-gray-400 mb-2">استخدم المتغيرات: {تفاصيل_العميل} , {الطلبات} , {الخصم} , {قيمة_الطلبات} , {التوصيل} , {الاجمالي}</p>
-                        <textarea id="admin-whatsapp-template" rows="6" class="w-full border rounded-lg p-2 font-bold text-brand-navy whitespace-pre-wrap" dir="rtl"></textarea>
-                    </div>
+    
+    <!-- ده المربع القديم بتاع الواتساب اللي إنت لقيته -->
+    <div class="bg-white border rounded-xl p-4 shadow-sm mb-4">
+        <h3 class="font-black text-brand-navy mb-3"><i class="fa-solid fa-language text-brand-cyanDark"></i> نصوص وتسميات النظام</h3>
+        <label class="text-xs font-bold text-gray-500 block mb-1">تسمية العميل القديم (تظهر في الواتساب والطلبات)</label>
+        <input type="text" id="admin-old-customer-label" placeholder="مثال: عميل سابق" class="w-full border rounded-lg p-2 mb-3 font-bold text-brand-navy">
+        <label class="text-xs font-bold text-gray-500 block mb-1">قالب رسالة الواتساب</label>
+        <p class="text-[10px] text-gray-400 mb-2">استخدم المتغيرات: {تفاصيل_العميل} , {الطلبات} , {الخصم} , {قيمة_الطلبات} , {التوصيل} , {الاجمالي}</p>
+        <textarea id="admin-whatsapp-template" rows="6" class="w-full border rounded-lg p-2 font-bold text-brand-navy whitespace-pre-wrap" dir="rtl"></textarea>
+    </div>
+
+    <!-- حط المربع الجديد بتاع TickTick هنا بالظبط 👇 -->
+    <div class="bg-white border rounded-xl p-4 shadow-sm mb-4">
+        <h3 class="font-black text-brand-navy mb-3"><i class="fa-solid fa-list-check text-brand-cyanDark"></i> قالب رسالة TickTick (المهام)</h3>
+        <p class="text-[10px] text-gray-400 mb-2">استخدم المتغيرات: {اسم_العميل} , {الموبايل} , {المنطقة} , {العنوان} , {الوقت} , {تفاصيل_الطلبات} , {قيمة_الطلبات} , {الخصم} , {التوصيل} , {الاجمالي} , {ملاحظات} , {الهاشتاجات}</p>
+        <textarea id="admin-ticktick-template" rows="8" class="w-full border rounded-lg p-2 font-bold text-brand-navy whitespace-pre-wrap" dir="rtl"></textarea>
+    </div>
+
+    <!-- وبعدين الكود بيكمل عادي (رسالة نجاح الطلب العادية ومنطقة الخطر إلخ...) -->
+
 
                     <div class="bg-white border rounded-xl p-4 shadow-sm">
                         <h3 class="font-black text-brand-navy mb-3"><i class="fa-solid fa-message text-green-500"></i> رسالة نجاح الطلب (العادية)</h3>
@@ -478,22 +490,24 @@
         const WEB3FORMS_ACCESS_KEY = "d8e4b3fe-018c-4c39-b15f-191ccc7cf10c";
 
         let globalSettings = {
-            storeOpen: true,
-            storeName: "سمان ههيا",
-            storeDesc: "مرحباً بك في متجر سمان ههيا.. نضمن لك أعلى جودة ونظافة.",
-            storePhone: "01208027294",
-            minOrder: 0,
-            freeDeliveryActive: false, freeDeliveryThreshold: 500,
-            bannerActive: true, bannerText: "متاح الآن حجز أوردرات - الكمية محدودة!",
-            crossSellActive: true, crossSellProductId: 'eggs',
-            promoCodes: [], bestSellers: ['super'],
-            showPromoField: true, 
-            successTitle: "تم استلام الأوردر! 🎉",
-            successMessage: "شكراً لثقتك في سمان ههيا.. الأوردر وصل للسيستم بنجاح وهنجهزهولك فوراً. هنتواصل معاك قريباً للتأكيد.",
-            rewardActive: false, rewardType: "fixed", rewardValue: 20, rewardMaxGenerations: 0,
-            oldCustomerLabel: "عميل سابق",
-            whatsappTemplate: "السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n{تفاصيل_العميل}\n\n🛒 *الطلبات:*\n{الطلبات}\n{الخصم}═════════════════\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n🚚 رسوم التوصيل: {التوصيل}\n💰 *الإجمالي النهائي: {الاجمالي} ج.م*\n\n(في انتظار تأكيد الحجز وموعد الاستلام)"
-        };
+    storeOpen: true,
+    storeName: "سمان ههيا",
+    storeDesc: "مرحباً بك في متجر سمان ههيا.. نضمن لك أعلى جودة ونظافة.",
+    storePhone: "01208027294",
+    minOrder: 0,
+    freeDeliveryActive: false, freeDeliveryThreshold: 500,
+    bannerActive: true, bannerText: "متاح الآن حجز أوردرات - الكمية محدودة!",
+    crossSellActive: true, crossSellProductId: 'eggs',
+    promoCodes: [], bestSellers: ['super'],
+    showPromoField: true, 
+    successTitle: "تم استلام الأوردر! 🎉",
+    successMessage: "شكراً لثقتك في سمان ههيا.. الأوردر وصل للسيستم بنجاح وهنجهزهولك فوراً. هنتواصل معاك قريباً للتأكيد.",
+    rewardActive: false, rewardType: "fixed", rewardValue: 20, rewardMaxGenerations: 0,
+    oldCustomerLabel: "عميل سابق",
+    whatsappTemplate: "السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n{تفاصيل_العميل}\n\n🛒 *الطلبات:*\n{الطلبات}\n{الخصم}═════════════════\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n🚚 رسوم التوصيل: {التوصيل}\n💰 *الإجمالي النهائي: {الاجمالي} ج.م*\n\n(في انتظار تأكيد الحجز وموعد الاستلام)",
+    ticktickTemplate: "🧾 **تفاصيل الأوردر كاملة:**\n👤 الاسم: {اسم_العميل}\n📱 الموبايل: {الموبايل}\n📍 المنطقة: {المنطقة}\n{العنوان}\n🕒 الوقت: {الوقت}\n--------------------------------\n🛒 الطلبات:\n{تفاصيل_الطلبات}\n--------------------------------\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n{الخصم}🚚 رسوم التوصيل: {التوصيل}\n💰 الإجمالي النهائي: {الاجمالي} ج.م\n{ملاحظات}\n{الهاشتاجات}"
+};
+
 
         let productsInfo = {
             'super': { name: 'طبق سوبر', basePrice: 100, weight: '300-350 جم', images: ['super.png'], isExtra: false },
@@ -952,6 +966,32 @@
 
             orderDetailsForTickTick += `\n${smartTagsArray.join(' ')}`;
 
+           // تطبيق قالب تيك تيك الديناميكي من لوحة التحكم
+let addressText = (isNew && customerAddress) ? `🏠 العنوان: ${customerAddress}` : "";
+let tickTickItemsStr = "";
+for (let id in cart) {
+    if(productsInfo[id]) tickTickItemsStr += `[ ${cart[id].quantity} ] ${cart[id].name} = ${cart[id].quantity * cart[id].price} ج.م\n`;
+}
+let discountTickTickText = discountAmount > 0 ? `🎁 الخصم: -${discountAmount} ج.م\n` : "";
+let notesText = earnedLoyalty ? `\n🎟️ ملاحظة: كود المرة القادمة (${newPromoCode})` : "";
+let defaultTickTick = "🧾 **تفاصيل الأوردر كاملة:**\n👤 الاسم: {اسم_العميل}\n📱 الموبايل: {الموبايل}\n📍 المنطقة: {المنطقة}\n{العنوان}\n🕒 الوقت: {الوقت}\n--------------------------------\n🛒 الطلبات:\n{تفاصيل_الطلبات}\n--------------------------------\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n{الخصم}🚚 رسوم التوصيل: {التوصيل}\n💰 الإجمالي النهائي: {الاجمالي} ج.م\n{ملاحظات}\n{الهاشتاجات}";
+
+orderDetailsForTickTick = (globalSettings.ticktickTemplate || defaultTickTick)
+    .replace('{اسم_العميل}', customerName)
+    .replace('{الموبايل}', customerPhone)
+    .replace('{المنطقة}', zoneName)
+    .replace('{العنوان}', addressText)
+    .replace('{الوقت}', `${orderDate} - ${orderTime}`)
+    .replace('{تفاصيل_الطلبات}', tickTickItemsStr.trim())
+    .replace('{قيمة_الطلبات}', subTotal)
+    .replace('{الخصم}', discountTickTickText)
+    .replace('{التوصيل}', deliveryText)
+    .replace('{الاجمالي}', finalTotal)
+    .replace('{ملاحظات}', notesText)
+    .replace('{الهاشتاجات}', smartTagsArray.join(' '));
+orderDetailsForTickTick = orderDetailsForTickTick.replace(/\n\s*\n/g, '\n');
+// نهاية قالب تيك تيك الديناميكي
+
             try {
                 fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ access_key: WEB3FORMS_ACCESS_KEY, subject: `🛒 ${itemsSummaryArray.join(' ')}`, "التفاصيل": orderDetailsForTickTick }) }).catch(e=>console.log(e));
 
@@ -1090,6 +1130,8 @@
             
             document.getElementById('admin-old-customer-label').value = globalSettings.oldCustomerLabel || 'عميل سابق';
             document.getElementById('admin-whatsapp-template').value = globalSettings.whatsappTemplate || 'السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n{تفاصيل_العميل}\n\n🛒 *الطلبات:*\n{الطلبات}\n{الخصم}═════════════════\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n🚚 رسوم التوصيل: {التوصيل}\n💰 *الإجمالي النهائي: {الاجمالي} ج.م*\n\n(في انتظار تأكيد الحجز وموعد الاستلام)';
+            document.getElementById('admin-ticktick-template').value = globalSettings.ticktickTemplate || '🧾 **تفاصيل الأوردر كاملة:**\n👤 الاسم: {اسم_العميل}\n📱 الموبايل: {الموبايل}\n📍 المنطقة: {المنطقة}\n{العنوان}\n🕒 الوقت: {الوقت}\n--------------------------------\n🛒 الطلبات:\n{تفاصيل_الطلبات}\n--------------------------------\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n{الخصم}🚚 رسوم التوصيل: {التوصيل}\n💰 الإجمالي النهائي: {الاجمالي} ج.م\n{ملاحظات}\n{الهاشتاجات}';
+
 
             tempProducts = JSON.parse(JSON.stringify(productsInfo));
             renderAdminProducts(); 
@@ -1394,8 +1436,10 @@
                 showPromoField: document.getElementById('admin-show-promo-field').checked,
                 successTitle: document.getElementById('admin-success-title').value.trim(), successMessage: document.getElementById('admin-success-message').value.trim(), productsData: tempProducts,
                 oldCustomerLabel: document.getElementById('admin-old-customer-label').value.trim() || 'عميل سابق',
-                whatsappTemplate: document.getElementById('admin-whatsapp-template').value.trim() || 'السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n{تفاصيل_العميل}\n\n🛒 *الطلبات:*\n{الطلبات}\n{الخصم}═════════════════\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n🚚 رسوم التوصيل: {التوصيل}\n💰 *الإجمالي النهائي: {الاجمالي} ج.م*\n\n(في انتظار تأكيد الحجز وموعد الاستلام)'
-            };
+                whatsappTemplate: document.getElementById('admin-whatsapp-template').value.trim() || 'السلام عليكم، أريد تأكيد حجزي:\n\n📋 *بيانات العميل:*\n{تفاصيل_العميل}\n\n🛒 *الطلبات:*\n{الطلبات}\n{الخصم}═════════════════\n📦 قيمة الطلبات: {قيمة_الطلبات} ج.م\n🚚 رسوم التوصيل: {التوصيل}\n💰 *الإجمالي النهائي: {الاجمالي} ج.م*\n\n(في انتظار تأكيد الحجز وموعد الاستلام)',
+ticktickTemplate: document.getElementById('admin-ticktick-template').value.trim()
+};
+
 
             const btn = document.querySelector('#admin-dashboard-modal button[onclick="saveAdminData()"]'); const originalHtml = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xl"></i> جاري الحفظ...';
             if(hasCloud && db) {
